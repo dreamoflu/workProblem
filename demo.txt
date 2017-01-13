@@ -1,0 +1,62 @@
+﻿
+	1.swiper轮播图
+	var mySwiper = new Swiper('.swiper-container', {
+                autoplay: 3000,//自动轮播
+                autoplayDisableOnInteraction: false,//不加这个属性手指滑动后将能自动轮播
+                pagination: '.swiper-pagination',//加分页标记
+                observer: true, //修改swiper自己或子元素时，自动初始化swiper
+                observeParents: true,//做项目是遇到从后台获取到多张图片但是图片和分页符只显示了一张,加后两个属性后变为正常
+            });
+            
+	
+	2.ios不支持固定定位 (底部固定定位时在ios滑动屏幕底部会动)
+	解决方案 :1.使用iscroll,做兼容;
+	       2.不使用固定定位,使用绝对定位,body大小是一个屏幕的大小 底部相对于body做绝对定位;
+	                      在body再放一个div,内容超出部分在body内的div中滑动;
+    3.监听滚动条                  
+	     ①.手机端都不支持实时监听滚动条位置,只能在手机滑动结束后才能监听到滚动条位置所以使用下面的
+	                    方法$("#add").scroll(function(event) { });所做的吸顶盒等会有跳跃感
+	         ②.iscroll上的监听手机端滚动条位置的方法,在手机上滑动不了页面  
+	         var myScroll;
+             function loaded () {
+                myScroll = new IScroll('#wrapper', {
+                 scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+                onScrollMove: function() {
+                console.log('onScrollMove');
+              }
+            });
+         }
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);)
+  解决方法:1.安卓手机上的跳跃感无法消除只能用第一种方法做
+           2.ios上不使用js做吸顶盒,使用粘性定位的position:sticky,只有ios和火狐浏览器支持,css3新属相,对布局要求相对有点严格(但在ios上相当流畅),
+详见(http://note.youdao.com/noteshare?id=f2a31e67444699f72828e6493e0e95d0&sub=wcp1484223578830334或http://www.tuicool.com/articles/bi6J7nY);
+ 
+ 
+4.锚点跳转的方式不一样
+   ios上跳转到id位置时,使用js的window.location.href="";会使页面不能滑动,安卓没有问题
+       解决方法可以用JQ动画做到手机端表现形式一样(例如:$("#add").animate({scrollTop: $().scrolloff().top }, { duration: 100, easing: "swing" }));
+       
+5.判断网络是否连接
+   if(window.navigator.onLine==true){
+                     alert("已连接");
+
+               }else{
+                   alert("未连接");
+
+                };
+ 6.获取屏幕宽度问题
+    移动端页面如果没有写
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   则 document.documentelement.clientwidth获取的屏幕宽度一直是980px,获取屏幕分辨率则 正常,出现问题的地方是使用rem布局的时候;
+
+
+7.手机端不要用button按钮
+        即使设置了自己的样式,ios和安卓上的表现也不同,需要用div模拟
+    8.ios上滑动页面卡顿问题
+      给一个div设置overflow:scroll后内容超出此div页面能滑动,安卓手机正常,但是ios上回出现卡顿 .
+      解决方法:给div加一个css属性:-webkit-overflow-scrolling: touch;
+      
